@@ -1,0 +1,11 @@
+{
+	"extensionName": {
+		"message": "Better YouTube Interactions",
+		"description": "Name of the extension."
+	},
+
+	"extensionDescription": {
+		"message": "Easily and automatically like and comment on a Youtube video you're watching fullscreen.",
+		"description": "Description of the extension."
+	}
+}
