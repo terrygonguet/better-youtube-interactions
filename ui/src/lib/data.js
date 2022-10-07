@@ -24,7 +24,7 @@ import { Innertube } from "youtubei.js"
  * @property {string} url
  */
 
-const innerTube = Innertube.create({
+export const innerTube = await Innertube.create({
 	cookie: document.cookie,
 	fetch: (...args) => fetch(...args),
 })
