@@ -27,10 +27,7 @@
 			dislike,
 			comment() {
 				const id = getVideoId()
-				commentOnVideo(comment.trim(), id).then(
-					() => state.done(),
-					() => state.done(),
-				)
+				commentOnVideo(comment.trim(), id).then(() => state.done())
 				return "loading"
 			},
 			toggle: "icon",
