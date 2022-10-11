@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 manifest.json
+manifest-*
 
 # Editor directories and files
 .vscode/*
