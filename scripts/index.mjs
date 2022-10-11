@@ -8,12 +8,12 @@ function ensureUIExists() {
 	const isLoggedIn = !!document.querySelector("#avatar-btn")
 	if (!isLoggedIn) return
 
-	const container = document.querySelector(".ytp-iv-video-content")
+	const container = document.querySelector(".ytp-chrome-top-buttons")
 	if (!container) return
 
 	const elementExists = !!container.querySelector("aside#better-interactions")
 	if (!elementExists) {
-		const el = new Interactions({ target: container })
+		const el = new Interactions({ target: container, anchor: container.firstChild })
 	}
 }
 

@@ -30,15 +30,44 @@ export const innerTube = await Innertube.create({
 })
 
 /**
+ * @param {string} id
+ */
+export function likeVideo(id) {
+	return innerTube.interact.like(id)
+}
+
+/**
+ * @param {string} id
+ */
+export function dislikeVideo(id) {
+	return innerTube.interact.dislike(id)
+}
+
+/**
+ * @param {string} id
+ */
+export function clearLikeVideo(id) {
+	return innerTube.interact.removeLike(id)
+}
+
+/**
+ * @param {string} text
+ * @param {string} id
+ */
+export function commentOnVideo(text, id) {
+	if (!text) return
+	return innerTube.interact.comment(id, text)
+}
+
+/**
  * @returns {Promise<Playlist>}
  */
 async function massagePlaylist(source) {
-	const youtube = await innerTube
 	return {
 		author: massageAuthor(source.author),
 		id: source.id,
 		title: source.title.text,
-		videos: (await youtube.getPlaylist(source.id)).items.map(massageVideo).reverse(),
+		videos: (await innerTube.getPlaylist(source.id)).items.map(massageVideo).reverse(),
 	}
 }
 
