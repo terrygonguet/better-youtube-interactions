@@ -13,6 +13,7 @@ dist-ssr
 *.local
 manifest.json
 manifest-*
+*.zip
 
 # Editor directories and files
 .vscode/*
