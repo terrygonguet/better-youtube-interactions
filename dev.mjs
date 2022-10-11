@@ -22,18 +22,18 @@ async function writeManifest() {
 await copyFiles()
 await writeManifest()
 
-echo(colorize("Starting UI dev process..."))
-within(async () => {
-	await cd("ui")
-	await $`npm i`
-	await $`npm run dev`
-})
+// echo(colorize("Starting UI dev process..."))
+// within(async () => {
+// 	await cd("ui")
+// 	await $`npm i`
+// 	await $`npm run dev`
+// })
 
-echo(colorize("Starting web-ext dev process..."))
-within(async () => {
-	await cd("dist")
-	await $`web-ext run`
-})
+// echo(colorize("Starting web-ext dev process..."))
+// within(async () => {
+// 	await cd("dist")
+// 	await $`web-ext run`
+// })
 
 echo(colorize("\nWatching for file changes..."))
 
