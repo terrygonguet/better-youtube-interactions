@@ -6,6 +6,10 @@
 	import { clearLikeVideo, commentOnVideo, dislikeVideo, likeVideo } from "./data"
 	import fsm from "svelte-fsm"
 	import { onMount } from "svelte"
+	import { querySelectStore } from "./utils"
+
+	const likeBtn = querySelectStore("#top-level-buttons-computed button[aria-label^=like]")
+	const dislikeBtn = querySelectStore("#top-level-buttons-computed button[aria-label^=Dislike]")
 
 	let liked = false
 	let disliked = false
@@ -48,6 +52,7 @@
 			liked = true
 		}
 		disliked = false
+		flushState()
 	}
 
 	async function dislike() {
@@ -60,6 +65,7 @@
 			disliked = true
 		}
 		liked = false
+		flushState()
 	}
 
 	function getVideoId() {
@@ -74,16 +80,23 @@
 		if (e.key == "Enter" && e.ctrlKey) state.comment()
 	}
 
-	onMount(() => {
+	function flushState(..._dependencies) {
+		$dislikeBtn?.setAttribute("aria-pressed", disliked ? "true" : "false")
+		$likeBtn?.setAttribute("aria-pressed", liked ? "true" : "false")
+	}
+
+	function getLikedStateFromPage() {
 		// HACK: like/dislike data isn't returned by the youtubei api currently
-		const likeBtn = document.querySelector(
-			"#top-level-buttons-computed button[aria-label^=like]",
-		)
-		const dislikeBtn = document.querySelector(
-			"#top-level-buttons-computed button[aria-label^=Dislike]",
-		)
-		liked = likeBtn?.getAttribute("aria-pressed") == "true"
-		disliked = dislikeBtn?.getAttribute("aria-pressed") == "true"
+		liked = $likeBtn?.getAttribute("aria-pressed") == "true"
+		disliked = $dislikeBtn?.getAttribute("aria-pressed") == "true"
+	}
+
+	onMount(() => {
+		getLikedStateFromPage()
+		const observer = new MutationObserver(getLikedStateFromPage)
+		const video = document.querySelector(".html5-main-video")
+		if (video) observer.observe(video, { attributes: true })
+		return () => observer.disconnect()
 	})
 </script>
 
