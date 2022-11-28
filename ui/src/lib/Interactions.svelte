@@ -16,7 +16,19 @@
 	let comment = ""
 
 	const state = fsm("icon", {
-		icon: { toggle: "actions" },
+		icon: {
+			_enter() {
+				/** @type {HTMLVideoElement} */
+				const player = document.querySelector("#movie_player")
+				delete player.dataset.keepVisible
+			},
+			_exit() {
+				/** @type {HTMLVideoElement} */
+				const player = document.querySelector("#movie_player")
+				player.dataset.keepVisible = "true"
+			},
+			toggle: "actions",
+		},
 		actions: {
 			like,
 			dislike,
@@ -91,11 +103,17 @@
 		disliked = $dislikeBtn?.getAttribute("aria-pressed") == "true"
 	}
 
+	const observer = new MutationObserver(getLikedStateFromPage)
+	function ensureVideoObserver() {
+		observer?.disconnect()
+		const video = document.querySelector("#movie_player video")
+		if (video) observer.observe(video, { attributes: true })
+	}
+
 	onMount(() => {
 		getLikedStateFromPage()
-		const observer = new MutationObserver(getLikedStateFromPage)
-		const video = document.querySelector(".html5-main-video")
-		if (video) observer.observe(video, { attributes: true })
+		setInterval(ensureVideoObserver, 5000)
+		ensureVideoObserver()
 		return () => observer.disconnect()
 	})
 </script>
@@ -152,14 +170,28 @@
 		box-sizing: border-box;
 	}
 
-	:global(.ytp-autohide #better-interactions) {
+	:global(.ytp-autohide:not([data-keep-visible]) #better-interactions) {
 		opacity: 0;
 	}
-	:global(.paused-mode #better-interactions) {
+	:global(.paused-mode.ytp-big-mode #better-interactions) {
 		opacity: 1;
 	}
 	:global(.ytp-big-mode #better-interactions) {
 		display: inline-grid;
+		transition: opacity 0.25s cubic-bezier(0, 0, 0.2, 1);
+	}
+
+	:global(#movie_player[data-keep-visible] .ytp-title) {
+		display: flex !important;
+		opacity: 1 !important;
+	}
+	:global(#movie_player[data-keep-visible]
+			.ytp-chrome-top
+			.ytp-watch-later-button, #movie_player[data-keep-visible]
+			.ytp-chrome-top
+			.ytp-share-button, #movie_player[data-keep-visible] .ytp-chrome-top .ytp-cards-button) {
+		display: inline-block !important;
+		opacity: 1 !important;
 	}
 
 	aside {
